@@ -69,19 +69,12 @@
               size="sm"
               class="btn-actions-msg rotate-90 handle"
               icon="unfold_more"
-              @mousedown.prevent
+              @mousedown.prevent="startDrag(item, index)"
+              @mouseup="stopDrag"
+              @mouseleave="stopDrag"
             >
               <q-tooltip>Move query to another conversation.</q-tooltip>
             </q-btn>
-          </div>
-          <div v-else>
-            <q-btn
-              dense
-              flat
-              size="sm"
-              class="btn-actions-msg"
-              icon="content_copy"
-            />
           </div>
         </div>
       </div>
@@ -107,17 +100,38 @@ const messages = computed(() => {
 
 let draggedItem = null;
 const showPlaceholder = ref(false);
+const isDragging = ref(false);
+const sourceTabIndex = ref(null);
+
+const startDrag = (item, index) => {
+  draggedItem = item;
+  sourceTabIndex.value = props.tab.messages.indexOf(item);
+  isDragging.value = true;
+  console.log('Dragging item:', draggedItem);
+};
+
+const stopDrag = () => {
+  isDragging.value = false;
+  draggedItem = null; // Reset dragged item when mouse is released
+};
 
 const onDragStart = (item, index) => {
-  // Store the dragged item
-  draggedItem = item;
-  console.log('Dragging item:', draggedItem, "index: ", index);
+  if (isDragging.value) {
+    console.log('Drag started for:', item);
+  }
 };
 
 const onDrop = () => {
-  if (draggedItem) {
-    // Logic to handle the drop
-    console.log('Dropped item:', draggedItem);
+  if (isDragging.value && draggedItem) {
+    // Logic to move the dragged item to the current tab
+    const targetTabIndex = props.tab.messages.indexOf(draggedItem);
+    
+    if (sourceTabIndex.value !== targetTabIndex) {
+      // Remove from the source tab and add to the target tab
+      props.tab.messages.splice(sourceTabIndex.value, 1);
+      props.tab.messages.push(draggedItem);
+      console.log('Moved item:', draggedItem);
+    }
     
     // Reset dragged item
     draggedItem = null;
@@ -126,7 +140,7 @@ const onDrop = () => {
 };
 
 const isDraggable = (index) => {
-  return index === messages.value.length - 1 && messages.value[index].type === "query";
+  return isDragging.value && index === messages.value.length - 1 && messages.value[index].type === "query";
 };
 
 const isLastQuery = (index) => {
