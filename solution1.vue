@@ -15,7 +15,7 @@
       @dragleave="showPlaceholder = false"
     >
       <div v-if="showPlaceholder" class="placeholder"></div>
-      
+
       <div
         v-for="(item, index) in messages"
         :key="item.message_id"
@@ -73,7 +73,6 @@
               @mousedown.prevent="startDrag(item, index)"
               @mouseup="stopDrag"
               @mouseleave="stopDrag"
-              @dragstart.prevent
             >
               <q-tooltip>Move query to another conversation.</q-tooltip>
             </q-btn>
@@ -83,7 +82,6 @@
     </q-scroll-area>
   </div>
 </template>
-
 <script setup>
 import { ref, computed } from "vue";
 import { defineProps } from 'vue';
@@ -109,7 +107,6 @@ const startDrag = (item, index) => {
   draggedItem = item;
   sourceTabIndex.value = index; // Store the index of the dragged item
   isDragging.value = true;
-  console.log('Dragging item:', draggedItem);
 };
 
 const stopDrag = () => {
@@ -125,7 +122,7 @@ const onDragStart = (item, index) => {
 
 const onDrop = () => {
   if (isDragging.value && draggedItem) {
-    // Logic to move the dragged item to the current tab
+    // Check if the last message is dropped
     const targetTabIndex = props.tab.messages.indexOf(draggedItem);
     
     if (sourceTabIndex.value !== targetTabIndex) {
@@ -142,14 +139,13 @@ const onDrop = () => {
 };
 
 const isDraggable = (index) => {
-  return index === sourceTabIndex.value; // Allow dragging only for the item being dragged
+  return isLastQuery(index); // Allow dragging only for the last query item
 };
 
 const isLastQuery = (index) => {
   return index === messages.value.length - 1 && messages.value[index].type === "query";
 };
 </script>
-
 <style scoped>
 .placeholder {
   border: 2px dotted #007bff; /* Change color as needed */
