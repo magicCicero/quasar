@@ -138,9 +138,9 @@ const isLastQuery = (index) => {
 
 <style scoped>
 .placeholder {
-  border: 2px dotted #007bff; /* Change color as needed */
-  height: 50px; /* Adjust height as needed */
-  margin: 10px 0; /* Space around the placeholder */
-  background-color: rgba(0, 123, 255, 0.1); /* Light background for visibility */
+  border: 2px dotted #007bff;
+  height: 50px;
+  margin: 10px 0;
+  background-color: rgba(0, 123, 255, 0.1);
 }
 </style>
