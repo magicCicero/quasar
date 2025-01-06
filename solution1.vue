@@ -28,6 +28,7 @@
         :data-message-id="item.message_id"
         :draggable="isDraggable(index)"
         @dragstart="onDragStart(item, index)"
+        @dragend="stopDrag"
       >
         <div
           class="bubble"
@@ -105,7 +106,7 @@ const sourceTabIndex = ref(null);
 
 const startDrag = (item, index) => {
   draggedItem = item;
-  sourceTabIndex.value = props.tab.messages.indexOf(item);
+  sourceTabIndex.value = index; // Store the index of the dragged item
   isDragging.value = true;
   console.log('Dragging item:', draggedItem);
 };
@@ -140,7 +141,7 @@ const onDrop = () => {
 };
 
 const isDraggable = (index) => {
-  return isDragging.value && index === messages.value.length - 1 && messages.value[index].type === "query";
+  return isDragging.value && index === sourceTabIndex.value; // Allow dragging only for the item being dragged
 };
 
 const isLastQuery = (index) => {
