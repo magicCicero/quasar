@@ -13,7 +13,7 @@
         "
       >
         <div
-          v-for="(item, index) in dummyMessages1"
+          v-for="(item, index) in messages1"
           :key="item.message_id"
           :class="[
             'q-message-wrapper',
@@ -22,10 +22,10 @@
           ]"
           style="position: relative"
           :data-message-id="item.message_id"
-          :draggable="isDraggable(index, dummyMessages1)"
-          @dragstart="onDragStart(item, index, 'dummyMessages1')"
+          :draggable="isDraggable(index, messages1)"
+          @dragstart="onDragStart(item, index, 'messages1')"
           @dragover.prevent
-          @drop="onDrop('dummyMessages1')"
+          @drop="onDrop('messages1')"
         >
           <div
             class="bubble"
@@ -61,14 +61,14 @@
           >
             <div v-if="item.type === 'query'">
               <q-btn
-                v-if="index === dummyMessages1.length - 1"
+                v-if="index === messages1.length - 1"
                 dense
                 flat
                 size="sm"
                 class="btn-actions-msg rotate-90 handle"
                 icon="unfold_more"
                 @mousedown.prevent
-                @click="startDrag('dummyMessages1')"
+                @click="startDrag('messages1')"
               >
                 <q-tooltip>Move query to another conversation.</q-tooltip>
               </q-btn>
@@ -99,7 +99,7 @@
           position: relative;
         "
         @dragover.prevent
-        @drop="onDrop('dummyMessages2')"
+        @drop="onDrop('messages2')"
         @dragenter="showPlaceholder = true"
         @dragleave="showPlaceholder = false"
       >
@@ -108,7 +108,7 @@
           class="placeholder"
         ></div>
         <div
-          v-for="(item, index) in dummyMessages2"
+          v-for="(item, index) in messages2"
           :key="item.message_id"
           :class="[
             'q-message-wrapper',
@@ -117,8 +117,8 @@
           ]"
           style="position: relative"
           :data-message-id="item.message_id"
-          :draggable="isDraggable(index, dummyMessages2)"
-          @dragstart="onDragStart(item, index, 'dummyMessages2')"
+          :draggable="isDraggable(index, messages2)"
+          @dragstart="onDragStart(item, index, 'messages2')"
         >
           <div
             class="bubble"
@@ -154,14 +154,14 @@
           >
             <div v-if="item.type === 'query'">
               <q-btn
-                v-if="index === dummyMessages2.length - 1"
+                v-if="index === messages2.length - 1"
                 dense
                 flat
                 size="sm"
                 class="btn-actions-msg rotate-90 handle"
                 icon="unfold_more"
                 @mousedown.prevent
-                @click="startDrag('dummyMessages2')"
+                @click="startDrag('messages2')"
               >
                 <q-tooltip>Move query to another conversation.</q-tooltip>
               </q-btn>
@@ -184,37 +184,17 @@
 
 <script setup>
 import { ref } from "vue";
+import { defineProps } from 'vue';
 
-const dummyMessages1 = ref([
-  {
-    message_id: "001",
-    type: "query",
-    message: "What is the capital of France?",
+const props = defineProps({
+  tab: {
+    type: Object,
+    required: true,
   },
-  {
-    message_id: "002",
-    type: "response",
-    message: "The capital of France is Paris.",
-  },
-  {
-    message_id: "003",
-    type: "query",
-    message: "Can you translate this text into Spanish?",
-  },
-]);
+});
 
-const dummyMessages2 = ref([
-  {
-    message_id: "011",
-    type: "query",
-    message: "What is the population of Earth in 2025?",
-  },
-  {
-    message_id: "012",
-    type: "response",
-    message: "The estimated population of Earth in 2025 is 8.1 billion.",
-  },
-]);
+const messages1 = ref(props.tab.messages[0]); // Assuming the first array of messages
+const messages2 = ref(props.tab.messages[1]); // Assuming the second array of messages
 
 let draggedItem = null;
 let draggedFromArray = null;
@@ -254,9 +234,9 @@ const isDraggable = (index, array) => {
 
 <style scoped>
 .placeholder {
-  border: 2px dotted #007bff; 
-  height: 50px; 
-  margin: 10px 0; 
-  background-color: rgba(0, 123, 255, 0.1); 
+  border: 2px dotted #007bff;
+  height: 50px;
+  margin: 10px 0;
+  background-color: rgba(0, 123, 255, 0.1);
 }
 </style>
