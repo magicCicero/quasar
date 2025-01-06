@@ -22,9 +22,10 @@
           ]"
           style="position: relative"
           :data-message-id="item.message_id"
-          draggable="true"
-          @dragstart="onDragStart(item, index, 'dummyMessages1')"
           :draggable="isDraggable(index, dummyMessages1)"
+          @dragstart="onDragStart(item, index, 'dummyMessages1')"
+          @dragover.prevent
+          @drop="onDrop('dummyMessages1')"
         >
           <div
             class="bubble"
@@ -67,6 +68,7 @@
                 class="btn-actions-msg rotate-90 handle"
                 icon="unfold_more"
                 @mousedown.prevent
+                @click="startDrag('dummyMessages1')"
               >
                 <q-tooltip>Move query to another conversation.</q-tooltip>
               </q-btn>
@@ -98,7 +100,13 @@
         "
         @dragover.prevent
         @drop="onDrop('dummyMessages2')"
+        @dragenter="showPlaceholder = true"
+        @dragleave="showPlaceholder = false"
       >
+        <div
+          v-if="showPlaceholder"
+          class="placeholder"
+        ></div>
         <div
           v-for="(item, index) in dummyMessages2"
           :key="item.message_id"
@@ -109,9 +117,8 @@
           ]"
           style="position: relative"
           :data-message-id="item.message_id"
-          draggable="true"
-          @dragstart="onDragStart(item, index, 'dummyMessages2')"
           :draggable="isDraggable(index, dummyMessages2)"
+          @dragstart="onDragStart(item, index, 'dummyMessages2')"
         >
           <div
             class="bubble"
@@ -154,6 +161,7 @@
                 class="btn-actions-msg rotate-90 handle"
                 icon="unfold_more"
                 @mousedown.prevent
+                @click="startDrag('dummyMessages2')"
               >
                 <q-tooltip>Move query to another conversation.</q-tooltip>
               </q-btn>
@@ -210,10 +218,13 @@ const dummyMessages2 = ref([
 
 let draggedItem = null;
 let draggedFromArray = null;
+const showPlaceholder = ref(false);
 
-const onDragStart = (item, index, arrayName) => {
-  if (index === eval(arrayName).value.length - 1 && item.type === "query") {
-    draggedItem = item;
+const startDrag = (arrayName) => {
+  const array = eval(arrayName);
+  const lastIndex = array.value.length - 1;
+  if (array.value[lastIndex].type === "query") {
+    draggedItem = array.value[lastIndex];
     draggedFromArray = arrayName;
   }
 };
@@ -232,6 +243,7 @@ const onDrop = (targetArrayName) => {
     // Reset dragged item
     draggedItem = null;
     draggedFromArray = null;
+    showPlaceholder.value = false; // Hide placeholder after drop
   }
 };
 
@@ -239,3 +251,12 @@ const isDraggable = (index, array) => {
   return index === array.length - 1 && array[index].type === "query";
 };
 </script>
+
+<style scoped>
+.placeholder {
+  border: 2px dotted #007bff; 
+  height: 50px; 
+  margin: 10px 0; 
+  background-color: rgba(0, 123, 255, 0.1); 
+}
+</style>
