@@ -17,7 +17,7 @@
       <div v-if="showPlaceholder" class="placeholder"></div>
       
       <div
-        v-for="(item, index) in allMessages"
+        v-for="(item, index) in messages"
         :key="item.message_id"
         :class="[
           'q-message-wrapper',
@@ -102,17 +102,17 @@ const props = defineProps({
 });
 
 // Combine messages from both arrays in the tab
-const allMessages = computed(() => {
-  return [...props.tab.messages[0], ...props.tab.messages[1]];
+const messages = computed(() => {
+  return props.tab.messages;
 });
 
 let draggedItem = null;
 const showPlaceholder = ref(false);
 
 const startDrag = () => {
-  const lastIndex = allMessages.value.length - 1;
-  if (allMessages.value[lastIndex].type === "query") {
-    draggedItem = allMessages.value[lastIndex];
+  const lastIndex = messages.value.length - 1;
+  if (messages.value[lastIndex].type === "query") {
+    draggedItem = messages.value[lastIndex];
   }
 };
 
@@ -128,19 +128,19 @@ const onDrop = () => {
 };
 
 const isDraggable = (index) => {
-  return index === allMessages.value.length - 1 && allMessages.value[index].type === "query";
+  return index === messages.value.length - 1 && messages.value[index].type === "query";
 };
 
 const isLastQuery = (index) => {
-  return index === allMessages.value.length - 1 && allMessages.value[index].type === "query";
+  return index === messages.value.length - 1 && messages.value[index].type === "query";
 };
 </script>
 
 <style scoped>
 .placeholder {
-  border: 2px dotted #007bff;
-  height: 50px;
-  margin: 10px 0;
-  background-color: rgba(0, 123, 255, 0.1);
+  border: 2px dotted #007bff; /* Change color as needed */
+  height: 50px; /* Adjust height as needed */
+  margin: 10px 0; /* Space around the placeholder */
+  background-color: rgba(0, 123, 255, 0.1); /* Light background for visibility */
 }
 </style>
