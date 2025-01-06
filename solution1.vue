@@ -70,7 +70,6 @@
               class="btn-actions-msg rotate-90 handle"
               icon="unfold_more"
               @mousedown.prevent
-              @click="startDrag"
             >
               <q-tooltip>Move query to another conversation.</q-tooltip>
             </q-btn>
@@ -101,7 +100,7 @@ const props = defineProps({
   },
 });
 
-// Combine messages from both arrays in the tab
+// Use the messages from the tab prop
 const messages = computed(() => {
   return props.tab.messages;
 });
@@ -109,11 +108,10 @@ const messages = computed(() => {
 let draggedItem = null;
 const showPlaceholder = ref(false);
 
-const startDrag = () => {
-  const lastIndex = messages.value.length - 1;
-  if (messages.value[lastIndex].type === "query") {
-    draggedItem = messages.value[lastIndex];
-  }
+const onDragStart = (item, index) => {
+  // Store the dragged item
+  draggedItem = item;
+  console.log('Dragging item:', draggedItem, "index: ", index);
 };
 
 const onDrop = () => {
