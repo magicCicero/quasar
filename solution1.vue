@@ -73,6 +73,7 @@
               @mousedown.prevent="startDrag(item, index)"
               @mouseup="stopDrag"
               @mouseleave="stopDrag"
+              @dragstart.prevent
             >
               <q-tooltip>Move query to another conversation.</q-tooltip>
             </q-btn>
@@ -141,7 +142,7 @@ const onDrop = () => {
 };
 
 const isDraggable = (index) => {
-  return isDragging.value && index === sourceTabIndex.value; // Allow dragging only for the item being dragged
+  return index === sourceTabIndex.value; // Allow dragging only for the item being dragged
 };
 
 const isLastQuery = (index) => {
