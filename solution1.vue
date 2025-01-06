@@ -101,31 +101,28 @@ const props = defineProps({
   },
 });
 
+// Combine messages from both arrays in the tab
 const allMessages = computed(() => {
   return [...props.tab.messages[0], ...props.tab.messages[1]];
 });
 
 let draggedItem = null;
-let draggedFromArray = null;
 const showPlaceholder = ref(false);
 
 const startDrag = () => {
   const lastIndex = allMessages.value.length - 1;
   if (allMessages.value[lastIndex].type === "query") {
     draggedItem = allMessages.value[lastIndex];
-    draggedFromArray = 'allMessages';
   }
 };
 
 const onDrop = () => {
   if (draggedItem) {
     // Logic to handle the drop
-    // You can implement your logic here to move the item to the desired location
     console.log('Dropped item:', draggedItem);
     
     // Reset dragged item
     draggedItem = null;
-    draggedFromArray = null;
     showPlaceholder.value = false; // Hide placeholder after drop
   }
 };
